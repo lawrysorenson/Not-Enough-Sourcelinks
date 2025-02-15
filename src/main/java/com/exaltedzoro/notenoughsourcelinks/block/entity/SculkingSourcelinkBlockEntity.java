@@ -35,25 +35,23 @@ public class SculkingSourcelinkBlockEntity extends BlockEntity {
         BlockPos pos = event.getEntity().blockPosition();
         for(BlockPos pPos : BlockPos.betweenClosed(pos.above(5).north(5).east(5), pos.below(5).south(5).west(5))) {
             BlockEntity entity = level.getBlockEntity(pPos);
-            if(entity instanceof SculkingSourcelinkBlockEntity && entity.source + EXP_RATIO * experience <= entity.max_source) {
-                sourceLink.activate(experience);
+            if(entity instanceof SculkingSourcelinkBlockEntity sourceLink && sourceLink.activate(experience)) {
                 event.getEntity().skipDropExperience();
                 break;
             }
         }
     }
 
-    public void activate(int experience) {
+    public boolean activate(int experience) {
+        if (!addSource(experience * EXP_RATIO)) return false;
         level.playSound(null, worldPosition, SoundEvents.SCULK_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1);
-        addSource(experience * EXP_RATIO);
+        return true;
     }
 
-    public void addSource(int source) {
-        if(this.source + source <= max_source) {
-            this.source += source;
-        } else {
-            this.source = max_source;
-        }
+    public boolean addSource(int source) {
+        if(this.source + source > max_source) return false;
+        this.source += source;
+        return true;
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, SculkingSourcelinkBlockEntity entity) {

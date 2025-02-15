@@ -22,6 +22,8 @@ public class SculkingSourcelinkBlockEntity extends BlockEntity {
     private int source = 0;
     private final int max_source = 5000;
 
+    private final int EXP_RATIO = 50;
+
     public SculkingSourcelinkBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SCULKING_SOURCELINK.get(), pPos, pBlockState);
     }
@@ -33,7 +35,7 @@ public class SculkingSourcelinkBlockEntity extends BlockEntity {
         BlockPos pos = event.getEntity().blockPosition();
         for(BlockPos pPos : BlockPos.betweenClosed(pos.above(5).north(5).east(5), pos.below(5).south(5).west(5))) {
             BlockEntity entity = level.getBlockEntity(pPos);
-            if(entity instanceof SculkingSourcelinkBlockEntity sourceLink) {
+            if(entity instanceof SculkingSourcelinkBlockEntity && entity.source + EXP_RATIO * experience <= entity.max_source) {
                 sourceLink.activate(experience);
                 event.getEntity().skipDropExperience();
                 break;
@@ -43,7 +45,7 @@ public class SculkingSourcelinkBlockEntity extends BlockEntity {
 
     public void activate(int experience) {
         level.playSound(null, worldPosition, SoundEvents.SCULK_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1);
-        addSource(experience * 50);
+        addSource(experience * EXP_RATIO);
     }
 
     public void addSource(int source) {

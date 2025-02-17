@@ -37,15 +37,15 @@ public class LunarSourcelinkBlockEntity extends BlockEntity {
             // 13000 % 24000
             if (isDay) return;
 
-            int baseAge = primetime ? 30 : 60;
-            int randBound = primetime ? 4 : 8;
+            int baseAge = primetime ? 40 : 80;
+            int randBound = primetime ? 6 : 12;
             int numParticles = primetime ? 2 : 1;
             float scaleAge = primetime ? (float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
             if (level.random.nextInt(randBound) == 0 && !Minecraft.getInstance().isPaused()) {
                 for (int i = 0; i < numParticles; i++) {
                     Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.8, 0.5);
                     particlePos = particlePos.add(ParticleUtil.pointInSphere());
-                    level.addParticle(ParticleLineData.createData(new ParticleColor(255, 25, 180), scaleAge, baseAge + level.random.nextInt(20)),
+                    level.addParticle(ParticleLineData.createData(new ParticleColor(173, 216, 230), scaleAge, baseAge + level.random.nextInt(20)),
                             particlePos.x(), particlePos.y(), particlePos.z(),
                             pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5);
                 }
